@@ -1,3 +1,3 @@
 # Chat APP
-<h2>Aplicativo de chat em tempo real</h2>
-<h2>Tecnologia utilizadas: Socket.io , Node.js , React.js com typescript</h2>
+<p>Aplicativo de chat em tempo real</p>
+<p>Tecnologias utilizadas: Socket.io , Node.js , React.js com typescript</p>
