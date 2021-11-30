@@ -47,16 +47,34 @@ class Users{
     return { newUser };
   }
 
+
+  removeUser = (id) => {
+    const index = this.users.findIndex((user) => user.id === id);
+  
+    if(index !== -1) return this.users.splice(index, 1)[0];
+  }
+
+
+  getUser = (id) => { 
+    return this.users.find((user) => user.id === id);
+  }
+
+
+  getUsersInRoom = (room) => {
+    return this.users.filter((user) => user.room === room);
+  }
+
+
   #checkIfUserExists(name,room){
     const userExists = this.users.find((user) => user.room === room && user.name === name);
     if (userExists) {
-      throw Error("Username is taken!");
+      throw new Error("Username is taken!");
     }
   }
 
   #checkIfFieldsAreFilled(name,room){
     if(!name || !room){
-       throw { error: 'Username and room are required.' };
+       throw new Error('Username and room are required.');
     }
   }
 
@@ -65,5 +83,3 @@ class Users{
 module.exports={users,addUser, removeUser, getUser, getUsersInRoom}
 module.exports=Users;
 
-usersClass = new Users();
-console.log(usersClass.addUser({id:"teste",name:"abc",room:"2"}));

@@ -1,5 +1,5 @@
 const Users = require('../users');
-//const users = require('../users');
+users = new Users();
 
 
 test('Adds a user to users array',() => {
@@ -10,18 +10,22 @@ test('Adds a user to users array',() => {
     expect(users.users).toEqual(expect.arrayContaining([user]));
 });
 
+
 test('Adds a repetead user to users array',() => {
-    users = new Users();
-    userOne = {id:"1",name:"teste",room:"sala_teste"};
-    userTwo = {id:"1",name:"teste",room:"sala_teste"};
+
+    userOne = {id:"2",name:"teste2",room:"sala_teste"};
+    userTwo = {id:"3",name:"teste2",room:"sala_teste"};
 
     users.addUser(userOne);
 
-    expect(addUser(userTwo)).toThrow();
+    expect(() => {
+        users.addUser(userTwo);
+    }).toThrow(Error);
 });
 
+
 test('Remove a user from users array', () =>{
-    user = {id:"2",name:"teste2",room:"sala_teste2"};
+    user = {id:"4",name:"teste4",room:"sala_teste4"};
     users.users.push(user);
 
     users.removeUser(user.id);
@@ -41,10 +45,10 @@ test('Getting user information from users array',() => {
 
 
 test('Getting all users in the same room from users array',() =>{
-    user = {id:"4",name:"teste4",room:"sala_teste4"};
+    user = {id:"5",name:"teste5",room:"sala_teste5"};
     users.users.push(user);
 
-    const usersInTheRoom = users.getUsersInRoom("sala_teste4");
+    const usersInTheRoom = users.getUsersInRoom(user.room);
 
     expect(usersInTheRoom).toEqual(expect.arrayContaining([user]))
 })
