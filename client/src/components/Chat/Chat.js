@@ -49,8 +49,6 @@ const Chat = () => {
         }
     }
 
-    console.log(message);
-    console.log(messages);
     return(
         <div className="outerContainer">
             <div className="container">
