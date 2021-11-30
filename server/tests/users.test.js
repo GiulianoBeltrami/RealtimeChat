@@ -1,4 +1,5 @@
-const users = require('../users');
+const Users = require('../users');
+//const users = require('../users');
 
 
 test('Adds a user to users array',() => {
@@ -9,6 +10,15 @@ test('Adds a user to users array',() => {
     expect(users.users).toEqual(expect.arrayContaining([user]));
 });
 
+test('Adds a repetead user to users array',() => {
+    users = new Users();
+    userOne = {id:"1",name:"teste",room:"sala_teste"};
+    userTwo = {id:"1",name:"teste",room:"sala_teste"};
+
+    users.addUser(userOne);
+
+    expect(addUser(userTwo)).toThrow();
+});
 
 test('Remove a user from users array', () =>{
     user = {id:"2",name:"teste2",room:"sala_teste2"};
