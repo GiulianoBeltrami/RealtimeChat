@@ -25,6 +25,7 @@ const removeUser = (id) => {
 
 const getUser = (id) => users.find((user) => user.id === id);
 
+
 const getUsersInRoom = (room) => users.filter((user) => user.room === room);
 
 class Users{
@@ -38,44 +39,72 @@ class Users{
     name = name.trim().toLowerCase();
     room = room.trim().toLowerCase();
   
-    this.#checkIfUserExists(name,room);
+    this.#checkIfUserNameAlreadyExistsOnRoom(name,room);
   
-    const newUser = { id, name, room };
+    const user = { id, name, room };
   
-    this.users.push(newUser);
+    this.users.push(user);
   
-    return { newUser };
+    return { user };
   }
 
 
   removeUser = (id) => {
-    const index = this.users.findIndex((user) => user.id === id);
+    const userIndex =  this.#findUserIndexInUsersArray(id);
   
-    if(index !== -1) return this.users.splice(index, 1)[0];
+    if(this.#isUserFound(userIndex)){
+      this.#removeElementFromUsersArray(userIndex);
+    }
   }
 
 
   getUser = (id) => { 
-    return this.users.find((user) => user.id === id);
+    return this.#findUserById(id);
   }
 
 
   getUsersInRoom = (room) => {
-    return this.users.filter((user) => user.room === room);
+    return this.#findAllUsersInRoom(room);
   }
 
 
-  #checkIfUserExists(name,room){
+  #checkIfUserNameAlreadyExistsOnRoom(name,room){
     const userExists = this.users.find((user) => user.room === room && user.name === name);
     if (userExists) {
       throw new Error("Username is taken!");
     }
   }
 
+
   #checkIfFieldsAreFilled(name,room){
     if(!name || !room){
        throw new Error('Username and room are required.');
     }
+  }
+
+
+  #findUserIndexInUsersArray(id){
+    return this.users.findIndex((user) => user.id === id);
+  }
+
+
+  #removeElementFromUsersArray(index){
+    return this.users.splice(index,1)[0];
+  }
+
+
+  #isUserFound(index){
+    return index!== -1;
+  }
+
+
+  #findUserById(id){
+    return this.users.find((user) => user.id === id);
+  }
+
+
+  #findAllUsersInRoom(room){
+    return this.users.filter(user => user.room === room);
   }
 
 }
