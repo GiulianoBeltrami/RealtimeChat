@@ -23,7 +23,7 @@ class Users{
     const userIndex =  this.#findUserIndexInUsersArray(id);
   
     if(this.#isUserFound(userIndex)){
-      this.#removeElementFromUsersArray(userIndex);
+      return this.#removeElementFromUsersArray(userIndex);
     }
   }
 

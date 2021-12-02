@@ -18,81 +18,21 @@ options={
     origins:["http://localhost:3001"]
 }
 
-const io = socketio(server,options);
 
-io.on('connection', socket => {
-    joinSocket(socket);
-
-    sendMessageSocket(socket);
-
-    disconnectSocket(socket);
-})
-
-server.listen(PORT, () =>{
-    console.log(`Server has started on port ${PORT}`)
-});
-
-function joinSocket(socket){
-    return socket.on('join', ({ name , room}, callback) => {
-        
-            const {user} = users.addUser({id:socket.id,name,room});
-
-            socket.join(user.room);
-
-            socket.emit('message',{ user:'admin',text:`Olá ${user.name}, seja bem vindo a sala ${user.room}`});
-
-            socket.broadcast.to(user.room).emit('message', {user:'admin',text:`${user.name} entrou!`} );
-            
-
-            io.to(user.room).emit('roomData', {room: user.room, users:users.getUsersInRoom(user.room)});
-
-            callback();
-        })
-}
-
-function sendMessageSocket(socket){
-    return  socket.on('sendMessage', (message,callback) => {
-                const user = users.getUser(socket.id);
-
-                console.log('--------------------------------------------------------------');
-                console.log('User send message');
-                console.log(user);
-                console.log('Send: ',message);
-                console.log('--------------------------------------------------------------');
-                
-                io.to(user.room).emit('message',{user:user.name , text:message});
-
-                callback();
-            })
-}
-
-function disconnectSocket(socket){
-    return  socket.on('disconnect', () => {
-                const user = users.removeUser(socket.id);
-
-                if (user){
-                    io.to(user.room).emit('message',{ user:'admin',text:`${user.name} saiu da sala!`});
-                    io.to(user.room).emit('roomData',{room:user.room , users:users.getUsersInRoom(user.room)});
-                }
-            })
-}
-
-class chatSocket{
+class ChatSocket{
 
     constructor(server,options){
-        this.server = server;
-        this.options = options;
         this.io = socketio(server,options);
     }
 
     connectionSocket = () => {
-        this.io.on('connection', socket => {
+        return this.io.on('connection', socket => {
 
-            joinSocket(socket);
+            this.joinSocket(socket);
         
-            sendMessageSocket(socket);
+            this.sendMessageSocket(socket);
         
-            disconnectSocket(socket);
+            this.disconnectSocket(socket);
         })
     }
     
@@ -108,7 +48,7 @@ class chatSocket{
             socket.broadcast.to(user.room).emit('message', {user:'admin',text:`${user.name} entrou!`} );
             
 
-            io.to(user.room).emit('roomData', {room: user.room, users:users.getUsersInRoom(user.room)});
+            this.io.to(user.room).emit('roomData', {room: user.room, users:users.getUsersInRoom(user.room)});
 
             callback();
         })
@@ -119,7 +59,7 @@ class chatSocket{
         return  socket.on('sendMessage', (message,callback) => {
             const user = users.getUser(socket.id);
 
-            io.to(user.room).emit('message',{user:user.name , text:message});
+            this.io.to(user.room).emit('message',{user:user.name , text:message});
 
             callback();
         })
@@ -131,10 +71,19 @@ class chatSocket{
             const user = users.removeUser(socket.id);
 
             if (user){
-                io.to(user.room).emit('message',{ user:'admin',text:`${user.name} saiu da sala!`});
-                io.to(user.room).emit('roomData',{room:user.room , users:users.getUsersInRoom(user.room)});
+                this.io.to(user.room).emit('message',{ user:'admin',text:`${user.name} saiu da sala!`});
+                this.io.to(user.room).emit('roomData',{room:user.room , users:users.getUsersInRoom(user.room)});
             }
         })
     }
 
 }
+
+const chatSocket = new ChatSocket(server,options);
+chatSocket.connectionSocket();
+
+server.listen(PORT, () =>{
+    console.log(`Server has started on port ${PORT}`)
+});
+
+
