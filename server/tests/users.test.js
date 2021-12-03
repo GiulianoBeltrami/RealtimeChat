@@ -18,9 +18,7 @@ test('Adds a repetead user to users array',() => {
 
     users.addUser(userOne);
 
-    expect(() => {
-        users.addUser(userTwo);
-    }).toThrow(Error);
+    expect(users.addUser(userTwo)).toEqual(expect.not.arrayContaining([userTwo]));
 });
 
 
@@ -35,7 +33,7 @@ test('Remove a user from users array', () =>{
 
 
 test('Getting user information from users array',() => {
-    user = {id:"3",name:"teste3",room:"sala_teste3"};
+    user = {id:"10",name:"teste10",room:"sala_teste3"};
     users.users.push(user);
 
     const userInformation = users.getUser(user.id);

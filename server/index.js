@@ -39,8 +39,12 @@ class ChatSocket{
     joinSocket = (socket) =>{
         return socket.on('join', ({ name , room}, callback) => {
             
-            const {user} = users.addUser({id:socket.id,name,room});
+            const {user,Error} = users.addUser({id:socket.id,name,room});
 
+            if(Error)
+            {
+                return 0;
+            }
             socket.join(user.room);
 
             socket.emit('message',{ user:'admin',text:`Olá ${user.name}, seja bem vindo a sala ${user.room}`});
@@ -80,7 +84,10 @@ class ChatSocket{
 }
 
 const chatSocket = new ChatSocket(server,options);
+
 chatSocket.connectionSocket();
+
+
 
 server.listen(PORT, () =>{
     console.log(`Server has started on port ${PORT}`)

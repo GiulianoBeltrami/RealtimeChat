@@ -13,7 +13,7 @@ const Chat = () => {
     const [room,setRoom] = useState('');
     const [message,setMessage] = useState('');
     const [messages,setMessages] = useState([]);
-    const ENDPOINT = 'http://localhost:3000/';
+    const ENDPOINT = 'https://realtime-chat-application-v1.herokuapp.com/';
     const urlQueryString = window.location.search;
 
     useEffect(() => {

@@ -4,13 +4,15 @@ class Users{
 
   addUser = ({ id, name, room }) => {
 
-    this.#checkIfFieldsAreFilled(name,room);
-
-    name = name.trim().toLowerCase();
-    room = room.trim().toLowerCase();
-  
-    this.#checkIfUserNameAlreadyExistsOnRoom(name,room);
-  
+    try {
+      this.#checkIfFieldsAreFilled(name,room);
+      name = name.trim().toLowerCase();
+      room = room.trim().toLowerCase();
+      this.#checkIfUserNameAlreadyExistsOnRoom(name,room);
+    } catch (error) {
+      return error;
+    }
+    
     const user = { id, name, room };
   
     this.users.push(user);
@@ -41,14 +43,14 @@ class Users{
   #checkIfUserNameAlreadyExistsOnRoom(name,room){
     const userExists = this.users.find((user) => user.room === room && user.name === name);
     if (userExists) {
-      throw new Error("Username is taken!");
+      throw {Error:"Username is Taken!"}
     }
   }
 
 
   #checkIfFieldsAreFilled(name,room){
     if(!name || !room){
-       throw new Error('Username and room are required.');
+      throw {Error:"Username and room are required."}
     }
   }
 
